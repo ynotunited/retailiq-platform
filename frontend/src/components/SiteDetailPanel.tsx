@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { X, Sparkles, AlertTriangle, UserCog } from 'lucide-react';
 
 interface SiteDetailPanelProps {
@@ -7,6 +7,20 @@ interface SiteDetailPanelProps {
 }
 
 const SiteDetailPanel: React.FC<SiteDetailPanelProps> = ({ site, onClose }) => {
+  const [status, setStatus] = useState(site?.status || 'approved');
+  const [justification, setJustification] = useState('');
+  const [savedMessage, setSavedMessage] = useState('');
+
+  React.useEffect(() => {
+    setStatus(site?.status || 'approved');
+    setJustification('');
+    setSavedMessage('');
+  }, [site]);
+
+  const handleUpdate = () => {
+    setSavedMessage(`Status updated to ${status.replace('_', ' ')}.`);
+  };
+
   return (
     <div 
       className="site-detail-panel glass-panel"
@@ -35,10 +49,10 @@ const SiteDetailPanel: React.FC<SiteDetailPanelProps> = ({ site, onClose }) => {
                 {site.score.toFixed(1)}
               </h2>
             </div>
-            <button onClick={onClose} style={{ padding: '4px', borderRadius: '50%', background: 'var(--bg-secondary)' }}>
-              <X size={18} />
-            </button>
-          </div>
+              <button onClick={onClose} style={{ padding: '4px', borderRadius: '50%', background: 'var(--bg-secondary)' }}>
+                <X size={18} />
+              </button>
+            </div>
 
           {/* Body */}
           <div className="scrollable-y" style={{ flex: 1, padding: 'var(--space-md)' }}>
@@ -101,7 +115,8 @@ const SiteDetailPanel: React.FC<SiteDetailPanelProps> = ({ site, onClose }) => {
               </div>
               <div style={{ marginBottom: 'var(--space-sm)' }}>
                 <select 
-                  defaultValue={site.status || "approved"}
+                  value={status}
+                  onChange={(event) => setStatus(event.target.value)}
                   style={{ width: '100%', padding: 'var(--space-sm)', background: 'var(--bg-secondary)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)', color: 'var(--text-primary)', outline: 'none' }}
                 >
                   <option value="approved">✅ Approved</option>
@@ -111,11 +126,23 @@ const SiteDetailPanel: React.FC<SiteDetailPanelProps> = ({ site, onClose }) => {
               </div>
               <textarea 
                 placeholder="Enter justification to override this recommendation..."
+                value={justification}
+                onChange={(event) => setJustification(event.target.value)}
                 style={{ width: '100%', minHeight: '80px', background: 'var(--bg-secondary)', border: '1px solid var(--border-light)', borderRadius: 'var(--radius-md)', padding: 'var(--space-sm)', color: 'var(--text-primary)', fontFamily: 'inherit', fontSize: 'var(--font-sm)', resize: 'vertical' }}
               ></textarea>
-              <button className="btn-secondary" style={{ width: '100%', marginTop: 'var(--space-sm)', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}>
+              <button
+                className="btn-secondary"
+                type="button"
+                onClick={handleUpdate}
+                style={{ width: '100%', marginTop: 'var(--space-sm)', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
+              >
                 <UserCog size={16} /> Update Status
               </button>
+              {savedMessage && (
+                <div style={{ marginTop: 'var(--space-sm)', fontSize: 'var(--font-sm)', color: 'var(--accent-emerald)' }}>
+                  {savedMessage}
+                </div>
+              )}
             </div>
 
           </div>

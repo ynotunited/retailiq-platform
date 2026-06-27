@@ -1,17 +1,29 @@
-import React from 'react';
-import { Download, Printer } from 'lucide-react';
+import React, { useState } from 'react';
+import { Download, Printer, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 const ExecutiveReport: React.FC = () => {
+  const [lastAction, setLastAction] = useState<string | null>(null);
+
   return (
     <div style={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column', alignItems: 'center' }}>
       
       <div className="flex-between stagger-1" style={{ width: '100%', maxWidth: '900px', padding: 'var(--space-lg)', paddingBottom: 0 }}>
         <h1>Executive Report</h1>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button className="btn-secondary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            className="btn-secondary"
+            type="button"
+            onClick={() => setLastAction('CSV export prepared')}
+            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+          >
             <Download size={16} /> Export CSV
           </button>
-          <button className="btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            className="btn-primary"
+            type="button"
+            onClick={() => setLastAction('PDF export prepared')}
+            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+          >
             <Printer size={16} /> Export PDF
           </button>
         </div>
@@ -55,13 +67,17 @@ const ExecutiveReport: React.FC = () => {
             <span>Partial Data Used: Some demographic data relies on county-level fallback due to census tract suppression. Confidence scores for Site #15 and #22 are reduced.</span>
           </div>
 
+          {lastAction && (
+            <div className="banner" style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#6EE7B7' }}>
+              <CheckCircle2 size={18} />
+              <span>{lastAction}</span>
+            </div>
+          )}
+
         </div>
       </div>
     </div>
   );
 };
-
-// Add lucide import for AlertTriangle here
-import { AlertTriangle } from 'lucide-react';
 
 export default ExecutiveReport;

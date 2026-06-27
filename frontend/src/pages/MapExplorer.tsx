@@ -15,6 +15,10 @@ const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.j
 
 const MapExplorer: React.FC = () => {
   const [showLayerPanel, setShowLayerPanel] = useState(true);
+  const [layerVisibility, setLayerVisibility] = useState({
+    competitorDensity: true,
+    populationDensity: true,
+  });
   const navigate = useNavigate();
   const [MapComponents, setMapComponents] = useState<{
     Map: React.ComponentType<any>;
@@ -74,9 +78,26 @@ const MapExplorer: React.FC = () => {
           <div className="layer-item">
             <div className="flex-between">
               <span style={{ fontWeight: 'var(--weight-medium)' }}>Competitor Density</span>
-              <div className="toggle-switch active"></div>
+              <button
+                type="button"
+                className={`toggle-switch ${layerVisibility.competitorDensity ? 'active' : ''}`}
+                aria-pressed={layerVisibility.competitorDensity}
+                aria-label="Toggle Competitor Density"
+                onClick={() =>
+                  setLayerVisibility((current) => ({
+                    ...current,
+                    competitorDensity: !current.competitorDensity,
+                  }))
+                }
+              />
             </div>
-            <div style={{ marginTop: 'var(--space-sm)', fontSize: 'var(--font-xs)', color: 'var(--text-secondary)' }}>
+            <div
+              style={{
+                marginTop: 'var(--space-sm)',
+                fontSize: 'var(--font-xs)',
+                color: layerVisibility.competitorDensity ? 'var(--text-secondary)' : 'rgba(148,163,184,0.5)',
+              }}
+            >
               Source: OSM • Vintage: 2024
             </div>
           </div>
@@ -84,12 +105,38 @@ const MapExplorer: React.FC = () => {
           <div className="layer-item" style={{ marginTop: 'var(--space-md)' }}>
             <div className="flex-between">
               <span style={{ fontWeight: 'var(--weight-medium)' }}>Population Density</span>
-              <div className="toggle-switch active"></div>
+              <button
+                type="button"
+                className={`toggle-switch ${layerVisibility.populationDensity ? 'active' : ''}`}
+                aria-pressed={layerVisibility.populationDensity}
+                aria-label="Toggle Population Density"
+                onClick={() =>
+                  setLayerVisibility((current) => ({
+                    ...current,
+                    populationDensity: !current.populationDensity,
+                  }))
+                }
+              />
             </div>
-            <div style={{ marginTop: 'var(--space-sm)', fontSize: 'var(--font-xs)', color: 'var(--text-secondary)' }}>
+            <div
+              style={{
+                marginTop: 'var(--space-sm)',
+                fontSize: 'var(--font-xs)',
+                color: layerVisibility.populationDensity ? 'var(--text-secondary)' : 'rgba(148,163,184,0.5)',
+              }}
+            >
               Source: Census ACS • Vintage: 2022
             </div>
-            <div style={{ marginTop: 'var(--space-xs)', fontSize: 'var(--font-xs)', color: 'var(--accent-rose)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <div
+              style={{
+                marginTop: 'var(--space-xs)',
+                fontSize: 'var(--font-xs)',
+                color: layerVisibility.populationDensity ? 'var(--accent-rose)' : 'rgba(244,63,94,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
               <AlertTriangle size={12} /> Some tracts suppressed
             </div>
           </div>
@@ -159,6 +206,9 @@ const MapExplorer: React.FC = () => {
           border-radius: 10px;
           position: relative;
           cursor: pointer;
+          border: none;
+          padding: 0;
+          flex-shrink: 0;
         }
         .toggle-switch::after {
           content: '';
@@ -177,6 +227,12 @@ const MapExplorer: React.FC = () => {
         .toggle-switch.active::after {
           left: 18px;
           background: white;
+        }
+        .toggle-switch:not(.active) {
+          background: rgba(255, 255, 255, 0.12);
+        }
+        .toggle-switch:not(.active)::after {
+          background: rgba(255, 255, 255, 0.55);
         }
         .text-accent-blue {
           color: var(--accent-blue);
