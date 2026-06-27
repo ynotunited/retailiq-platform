@@ -48,6 +48,8 @@ const MapExplorer: React.FC = () => {
     };
   }, []);
 
+  const visibleLayers = Object.values(layerVisibility).filter(Boolean).length;
+
   return (
     <div className="map-explorer-container" style={{ display: 'flex', height: '100%', width: '100%', position: 'relative' }}>
       
@@ -96,10 +98,16 @@ const MapExplorer: React.FC = () => {
                 marginTop: 'var(--space-sm)',
                 fontSize: 'var(--font-xs)',
                 color: layerVisibility.competitorDensity ? 'var(--text-secondary)' : 'rgba(148,163,184,0.5)',
+                opacity: layerVisibility.competitorDensity ? 1 : 0.55,
               }}
             >
               Source: OSM • Vintage: 2024
             </div>
+            {!layerVisibility.competitorDensity && (
+              <div style={{ marginTop: 'var(--space-xs)', fontSize: 'var(--font-xs)', color: 'var(--text-secondary)' }}>
+                Layer hidden from the map preview
+              </div>
+            )}
           </div>
 
           <div className="layer-item" style={{ marginTop: 'var(--space-md)' }}>
@@ -123,6 +131,7 @@ const MapExplorer: React.FC = () => {
                 marginTop: 'var(--space-sm)',
                 fontSize: 'var(--font-xs)',
                 color: layerVisibility.populationDensity ? 'var(--text-secondary)' : 'rgba(148,163,184,0.5)',
+                opacity: layerVisibility.populationDensity ? 1 : 0.55,
               }}
             >
               Source: Census ACS • Vintage: 2022
@@ -135,10 +144,16 @@ const MapExplorer: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
+                opacity: layerVisibility.populationDensity ? 1 : 0.55,
               }}
             >
               <AlertTriangle size={12} /> Some tracts suppressed
             </div>
+            {!layerVisibility.populationDensity && (
+              <div style={{ marginTop: 'var(--space-xs)', fontSize: 'var(--font-xs)', color: 'var(--text-secondary)' }}>
+                Population layer is currently off
+              </div>
+            )}
           </div>
         </div>
 
@@ -162,7 +177,12 @@ const MapExplorer: React.FC = () => {
             mapLib={MapComponents.maplibregl}
             initialViewState={INITIAL_VIEW_STATE}
             mapStyle={MAP_STYLE}
-            style={{ width: '100%', height: '100%' }}
+            style={{
+              width: '100%',
+              height: '100%',
+              filter: visibleLayers === 2 ? 'none' : 'saturate(0.9) brightness(0.95)',
+              transition: 'filter 0.25s ease',
+            }}
           >
             <MapComponents.NavigationControl position="top-right" />
             <MapComponents.ScaleControl position="bottom-right" />
@@ -189,6 +209,23 @@ const MapExplorer: React.FC = () => {
         >
           <Layers size={20} color={showLayerPanel ? 'var(--accent-blue)' : 'var(--text-primary)'} />
         </button>
+
+        <div
+          style={{
+            position: 'absolute',
+            top: 'var(--space-md)',
+            right: 'var(--space-md)',
+            zIndex: 20,
+            padding: '0.5rem 0.75rem',
+            borderRadius: 'var(--radius-md)',
+            background: 'rgba(2,6,23,0.75)',
+            border: '1px solid var(--border-light)',
+            color: 'var(--text-primary)',
+            fontSize: 'var(--font-xs)',
+          }}
+        >
+          {visibleLayers} layer{visibleLayers === 1 ? '' : 's'} active
+        </div>
       </div>
 
       {/* Basic internal styling for this component */}

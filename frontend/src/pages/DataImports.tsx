@@ -77,6 +77,7 @@ const DataImports: React.FC = () => {
   const [expandedIssue, setExpandedIssue] = useState<string | null>(null);
   const [expandedLayer, setExpandedLayer] = useState<string | null>(null);
   const [dupResolved, setDupResolved] = useState<Record<string, string>>({});
+  const [notice, setNotice] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleDrop = (e: React.DragEvent) => {
@@ -94,6 +95,7 @@ const DataImports: React.FC = () => {
     if (file) {
       setUploaded(file.name);
       setActiveTab(1);
+      setNotice(`Loaded ${file.name}`);
     }
   };
 
@@ -103,17 +105,23 @@ const DataImports: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', padding: 'var(--space-lg)', overflow: 'hidden' }}>
       
       {/* Header */}
-      <div className="flex-between stagger-1" style={{ marginBottom: 'var(--space-lg)' }}>
-        <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Database size={24} color="var(--accent-blue)" /> Data Hub
-        </h1>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="flex-between stagger-1" style={{ marginBottom: 'var(--space-lg)' }}>
+          <h1 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Database size={24} color="var(--accent-blue)" /> Data Hub
+          </h1>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
           {uploaded && (
             <div style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', padding: '6px 12px', borderRadius: 'var(--radius-md)', fontSize: 'var(--font-sm)', color: '#6EE7B7', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <CheckCircle size={14} /> {uploaded}
             </div>
           )}
         </div>
+
+        {notice && (
+          <div className="banner" style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.25)', color: '#93C5FD', marginBottom: 'var(--space-md)' }}>
+            <span>{notice}</span>
+          </div>
+        )}
       </div>
 
       {/* Tab Bar */}
@@ -178,11 +186,11 @@ const DataImports: React.FC = () => {
             </div>
 
             <div style={{ marginTop: 'var(--space-lg)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-md)' }}>
-              {[
-                { label: 'Coordinate Validation', desc: 'Rejects non-US coordinates', icon: Shield },
-                { label: 'SRS Auto-Reprojection', desc: 'Auto-converts to EPSG:4326', icon: GitBranch },
-                { label: 'Topology Check', desc: 'Detects self-intersections', icon: CheckCircle },
-                { label: 'Duplicate Detection', desc: 'Spatial fingerprint ±1m', icon: GitMerge },
+                {[
+                  { label: 'Coordinate Validation', desc: 'Rejects non-US coordinates', icon: Shield },
+                  { label: 'SRS Auto-Reprojection', desc: 'Auto-converts to EPSG:4326', icon: GitBranch },
+                  { label: 'Topology Check', desc: 'Detects self-intersections', icon: CheckCircle },
+                  { label: 'Duplicate Detection', desc: 'Spatial fingerprint ±1m', icon: GitMerge },
               ].map(f => {
                 const Icon = f.icon;
                 return (
@@ -396,6 +404,14 @@ const DataImports: React.FC = () => {
                         <div><div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Import Status</div><span style={{ fontSize: 'var(--font-sm)', color: 'var(--accent-emerald)' }}>{layer.import_status}</span></div>
                         <div><div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Ingested At</div><span style={{ fontSize: 'var(--font-sm)' }}>{new Date(layer.ingested_at).toLocaleString()}</span></div>
                         <div><div style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Features</div><span style={{ fontSize: 'var(--font-sm)' }}>{layer.feature_count?.toLocaleString()}</span></div>
+                        <button
+                          type="button"
+                          className="btn-secondary"
+                          onClick={() => setNotice(`Copied lineage for ${layer.name}`)}
+                          style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center' }}
+                        >
+                          Copy layer lineage
+                        </button>
                       </div>
                     )}
                   </div>

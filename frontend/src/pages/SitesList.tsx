@@ -10,6 +10,7 @@ const MOCK_SITES = [
 
 const SitesList: React.FC = () => {
   const [selectedSite, setSelectedSite] = useState<any | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   return (
     <div className="sites-container" style={{ display: 'flex', height: '100%', width: '100%' }}>
@@ -18,10 +19,21 @@ const SitesList: React.FC = () => {
       <div style={{ flex: 1, padding: 'var(--space-lg)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div className="flex-between" style={{ marginBottom: 'var(--space-lg)' }}>
           <h1>Candidate Sites</h1>
-          <button className="btn-secondary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            className="btn-secondary"
+            type="button"
+            onClick={() => setMessage('CSV export prepared')}
+            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+          >
             <BarChart2 size={16} /> Export CSV
           </button>
         </div>
+
+        {message && (
+          <div className="banner" style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#6EE7B7', marginBottom: 'var(--space-md)' }}>
+            <span>{message}</span>
+          </div>
+        )}
 
         <div className="glass-panel scrollable-y" style={{ flex: 1, overflow: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
