@@ -22,7 +22,12 @@ const AnalysisRuns: React.FC = () => {
         
         <div className="flex-between stagger-1" style={{ marginBottom: 'var(--space-lg)' }}>
           <h1>Analysis Runs</h1>
-          <button className="btn-primary" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            className="btn-primary"
+            type="button"
+            onClick={handleReRun}
+            style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}
+          >
             <Activity size={16} /> New Analysis
           </button>
         </div>

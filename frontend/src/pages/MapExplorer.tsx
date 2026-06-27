@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Layers, Activity, AlertTriangle } from 'lucide-react';
 
 const INITIAL_VIEW_STATE = {
@@ -14,6 +15,7 @@ const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.j
 
 const MapExplorer: React.FC = () => {
   const [showLayerPanel, setShowLayerPanel] = useState(true);
+  const navigate = useNavigate();
   const [MapComponents, setMapComponents] = useState<{
     Map: React.ComponentType<any>;
     NavigationControl: React.ComponentType<any>;
@@ -94,7 +96,12 @@ const MapExplorer: React.FC = () => {
         </div>
 
         <div style={{ padding: 'var(--space-md)', borderTop: '1px solid var(--border-light)' }}>
-          <button className="btn-primary" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+          <button
+            className="btn-primary"
+            type="button"
+            onClick={() => navigate('/analysis')}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
             <Activity size={18} />
             Run Analysis
           </button>
