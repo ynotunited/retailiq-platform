@@ -29,6 +29,10 @@ def init_pool() -> None:
         _pool = None
         return
     settings = get_settings()
+    if settings.disable_db_pool:
+        logger.warning("Database pool disabled by configuration.")
+        _pool = None
+        return
     _pool = pg_pool.ThreadedConnectionPool(
         minconn=2,
         maxconn=20,

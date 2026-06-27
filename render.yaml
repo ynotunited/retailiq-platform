@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: us-retail-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DISABLE_DB_POOL
+        value: true
+      - key: CORS_ORIGINS
+        value: '["https://us-retail-frontend.vercel.app"]'
+      - key: LOG_LEVEL
+        value: INFO

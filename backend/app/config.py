@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     # App
     app_env: str = "development"
     log_level: str = "INFO"
+    disable_db_pool: bool = False
+    cors_origins: list[str] = ["http://localhost:5173"]
 
     @property
     def bbox_tuple(self) -> tuple[float, float, float, float]:
